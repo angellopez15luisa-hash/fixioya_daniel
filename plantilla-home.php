@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
 
+
 <script>
     tailwind.config = {
         theme: {
@@ -39,7 +40,8 @@
         transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .nav-item.active-tab, .nav-item:hover {
+    .nav-item.active-tab,
+    .nav-item:hover {
         background-color: #00bcd4 !important;
         color: white !important;
         height: calc(100% + 14px);
@@ -91,13 +93,15 @@
         opacity: 1;
         visibility: visible;
     }
-    .menu-item{
-        list-style:none !important;
-        line-height:80px !important;
-    }
 
+    .menu-item {
+        list-style: none !important;
+        line-height: 80px !important;
+    }
 </style>
+
 <body class="bg-white text-slate-700 font-sans antialiased overflow-x-hidden selection:bg-cyan-500 selection:text-white">
+    <span>Angel</span>
     <div class="bg-[#1a1a1a] text-slate-400 text-xs py-2 px-6 hidden sm:block border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-6">
@@ -122,7 +126,7 @@
                 if (has_custom_logo()) :
                     the_custom_logo();
                 else :
-                    ?>
+                ?>
                     <a href="<?php echo esc_url(home_url()); ?>" rel="home">
                         <div class="header-logo__name"><?php bloginfo('name'); ?></div>
                         <?php if (get_bloginfo('description')) : ?>
@@ -130,7 +134,7 @@
                         <?php endif; ?>
                     </a>
                 <?php endif; ?>
-                 <!--<span class="bg-cyan-500 text-white px-2 py-0.5 rounded text-lg shadow-sm">F</span>IXIOYA-->
+                <!--<span class="bg-cyan-500 text-white px-2 py-0.5 rounded text-lg shadow-sm">F</span>IXIOYA-->
             </a>
 
             <nav id="main-nav" class="hidden lg:flex items-center font-bold text-xs tracking-wider uppercase text-slate-600 h-full items-stretch">
@@ -156,7 +160,7 @@
                             <a href="#contact" class="nav-item px-6 flex items-center justify-center">CONTACT</a>
                         </nav>
                     </div> -->
-    </header> 
+    </header>
 
     <!-- BANNER A PANTALLA COMPLETA (ESTILO IMPACTANTE CENTRADO) -->
     <section id="home" class="relative bg-[#1a1a1a] h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden border-b border-slate-200" data-aos="fade-in" data-aos-duration="1000">
@@ -568,122 +572,122 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-    AOS.init({
-        once: false,
-        mirror: true,
-        offset: 80,
-        duration: 900,
-        easing: 'ease-out-cubic',
-    });
+        AOS.init({
+            once: false,
+            mirror: true,
+            offset: 80,
+            duration: 900,
+            easing: 'ease-out-cubic',
+        });
 
-    window.addEventListener('load', () => {
-        if (window.location.hash !== '#home') {
-            window.scrollTo(0, 0);
-        }
-    });
+        window.addEventListener('load', () => {
+            if (window.location.hash !== '#home') {
+                window.scrollTo(0, 0);
+            }
+        });
 
-    const navLinks = document.querySelectorAll('#main-nav .nav-item');
+        const navLinks = document.querySelectorAll('#main-nav .nav-item');
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href');
-            if (targetId && targetId.length > 1) {
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    e.preventDefault();
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId.length > 1) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
 
-                    navLinks.forEach(nav => nav.classList.remove('active-tab'));
-                    this.classList.add('active-tab');
+                        navLinks.forEach(nav => nav.classList.remove('active-tab'));
+                        this.classList.add('active-tab');
 
-                    const headerOffset = 80;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        const headerOffset = 80;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        const sections = document.querySelectorAll('section[id], footer[id]');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-80px 0px -50% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active-tab');
+                        } else {
+                            link.classList.remove('active-tab');
+                        }
                     });
                 }
-            }
-        });
-    });
+            });
+        }, observerOptions);
 
-    const sections = document.querySelectorAll('section[id], footer[id]');
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '-80px 0px -50% 0px',
-        threshold: 0
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.getAttribute('id');
-                navLinks.forEach(link => {
-                    if (link.getAttribute('href') === `#${id}`) {
-                        link.classList.add('active-tab');
-                    } else {
-                        link.classList.remove('active-tab');
-                    }
-                });
-            }
-        });
-    }, observerOptions);
-
-    sections.forEach(section => {
-        observer.observe(section);
-    });
-
-    const bgSlides = document.querySelectorAll('.hero-bg-slide');
-    const textItems = document.querySelectorAll('.slide-text-item');
-    const dots = document.querySelectorAll('.slider-dot');
-    let currentSlide = 0;
-
-    function showSlide(index) {
-        bgSlides.forEach((slide, i) => {
-            if (i === index) {
-                slide.classList.add('active');
-            } else {
-                slide.classList.remove('active');
-            }
+        sections.forEach(section => {
+            observer.observe(section);
         });
 
-        textItems.forEach((text, i) => {
-            if (i === index) {
-                text.classList.remove('hidden');
-            } else {
-                text.classList.add('hidden');
-            }
-        });
+        const bgSlides = document.querySelectorAll('.hero-bg-slide');
+        const textItems = document.querySelectorAll('.slide-text-item');
+        const dots = document.querySelectorAll('.slider-dot');
+        let currentSlide = 0;
 
-        dots.forEach((dot, i) => {
-            if (i === index) {
-                dot.classList.remove('w-3', 'bg-white/50');
-                dot.classList.add('w-8', 'bg-cyan-500');
-            } else {
-                dot.classList.remove('w-8', 'bg-cyan-500');
-                dot.classList.add('w-3', 'bg-white/50');
-            }
-        });
-        currentSlide = index;
-    }
+        function showSlide(index) {
+            bgSlides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
 
-    let slideIntervalTimer = setInterval(() => {
-        let nextIndex = (currentSlide + 1) % bgSlides.length;
-        showSlide(nextIndex);
-    }, 5000);
+            textItems.forEach((text, i) => {
+                if (i === index) {
+                    text.classList.remove('hidden');
+                } else {
+                    text.classList.add('hidden');
+                }
+            });
 
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            clearInterval(slideIntervalTimer);
-            showSlide(index);
-            slideIntervalTimer = setInterval(() => {
-                let nextIndex = (currentSlide + 1) % bgSlides.length;
-                showSlide(nextIndex);
-            }, 5000);
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.remove('w-3', 'bg-white/50');
+                    dot.classList.add('w-8', 'bg-cyan-500');
+                } else {
+                    dot.classList.remove('w-8', 'bg-cyan-500');
+                    dot.classList.add('w-3', 'bg-white/50');
+                }
+            });
+            currentSlide = index;
+        }
+
+        let slideIntervalTimer = setInterval(() => {
+            let nextIndex = (currentSlide + 1) % bgSlides.length;
+            showSlide(nextIndex);
+        }, 5000);
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                clearInterval(slideIntervalTimer);
+                showSlide(index);
+                slideIntervalTimer = setInterval(() => {
+                    let nextIndex = (currentSlide + 1) % bgSlides.length;
+                    showSlide(nextIndex);
+                }, 5000);
+            });
         });
-    });
     </script>
     <!-- BOTÓN FLOTANTE IR ARRIBA -->
     <!-- BOTÓN FLOTANTE IR ARRIBA SUAVE -->
@@ -691,13 +695,13 @@
     <!-- BOTÓN FLOTANTE IR ARRIBA -->
     <!-- BOTÓN FLOTANTE IR ARRIBA -->
     <!-- BOTÓN FLOTANTE IR ARRIBA -->
-    <a href="#home" 
-       id="scrollTopBtn" 
-       aria-label="Volver al inicio" 
-       class="fixed bottom-6 right-6 z-50 bg-cyan-500 hover:bg-cyan-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 ease-in-out transform hover:scale-110 opacity-0 invisible translate-y-4">
+    <a href="#home"
+        id="scrollTopBtn"
+        aria-label="Volver al inicio"
+        class="fixed bottom-6 right-6 z-50 bg-cyan-500 hover:bg-cyan-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 ease-in-out transform hover:scale-110 opacity-0 invisible translate-y-4">
         <!-- Ícono de Flecha hacia arriba -->
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
         </svg>
     </a>
 
