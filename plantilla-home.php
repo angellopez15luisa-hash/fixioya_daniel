@@ -3,12 +3,32 @@
   Template Name: plantilla home
  */
 //get_header(); 
+
+$slides_php = [];
+
+if (have_rows('baner')) :
+    while (have_rows('baner')) : the_row();
+        $image = get_sub_field('image');
+
+        // Guardamos cada elemento como un array asociativo
+        $slides_php[] = [
+            'image'  => $image ? esc_url($image['url']) : '',
+            'tag'    => get_sub_field('Label'),
+            'title1' => get_sub_field('title1'),
+            'title2' => get_sub_field('title2'),
+            'desc'   => get_sub_field('description'),
+            'buton'  => get_sub_field('buton')
+        ];
+
+    endwhile;
+endif;
+
+$primer_slide = !empty($slides_php) ? $slides_php[0] : null;
+$primer_imagen = $primer_slide ? $primer_slide['image'] : '';
 ?>
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
-
 
 <script>
     tailwind.config = {
@@ -98,10 +118,14 @@
         list-style: none !important;
         line-height: 80px !important;
     }
+    .custom-logo-link img {
+    max-height: 50px; /* Controla la altura máxima del logo */
+    width: auto;
+    display: block;
+}
 </style>
 
 <body class="bg-white text-slate-700 font-sans antialiased overflow-x-hidden selection:bg-cyan-500 selection:text-white">
-    <span>Angel</span>
     <div class="bg-[#1a1a1a] text-slate-400 text-xs py-2 px-6 hidden sm:block border-b border-slate-800">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-6">
@@ -121,22 +145,24 @@
 
     <header class="sticky top-0 z-50 bg-white border-t border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#home" class="text-2xl font-black tracking-wider text-slate-700 uppercase flex items-center gap-1">
-                <?php
-                if (has_custom_logo()) :
-                    the_custom_logo();
-                else :
-                ?>
-                    <a href="<?php echo esc_url(home_url()); ?>" rel="home">
+
+            <!-- LOGO A LA IZQUIERDA -->
+            <div class="flex items-center">
+                <?php if (has_custom_logo()) : ?>
+                    <div class="custom-logo-link flex items-center">
+                        <?php the_custom_logo(); ?>
+                    </div>
+                <?php else : ?>
+                    <a href="<?php echo esc_url(home_url()); ?>" rel="home" class="flex items-center gap-2 text-2xl font-black tracking-wider text-slate-700 uppercase">
                         <div class="header-logo__name"><?php bloginfo('name'); ?></div>
                         <?php if (get_bloginfo('description')) : ?>
-                            <div class="header-logo__description"><?php bloginfo('description'); ?></div>
+                            <div class="header-logo__description text-xs text-slate-500 font-normal"><?php bloginfo('description'); ?></div>
                         <?php endif; ?>
                     </a>
                 <?php endif; ?>
-                <!--<span class="bg-cyan-500 text-white px-2 py-0.5 rounded text-lg shadow-sm">F</span>IXIOYA-->
-            </a>
+            </div>
 
+            <!-- MENÚ A LA DERECHA -->
             <nav id="main-nav" class="hidden lg:flex items-center font-bold text-xs tracking-wider uppercase text-slate-600 h-full items-stretch">
                 <?php
                 wp_nav_menu(array(
@@ -145,53 +171,54 @@
                     'items_wrap' => '%3$s', // Elimina por completo el <ul> y deja solo los elementos limpios
                 ));
                 ?>
-
             </nav>
 
-
-            <!--
-                        <nav id="main-nav" class="hidden lg:flex items-center font-bold text-xs tracking-wider uppercase text-slate-600 h-full items-stretch">
-                            <a href="#home" class="nav-item active-tab px-8 flex items-center justify-center shadow-lg">HOME</a>
-                            <a href="#about" class="nav-item px-6 flex items-center justify-center">ABOUT US</a>
-                            <a href="#features" class="nav-item px-6 flex items-center justify-center">FEATURES</a>
-                            <a href="#screenshots" class="nav-item px-6 flex items-center justify-center">CATEGORIAS</a>
-                            <a href="#team" class="nav-item px-6 flex items-center justify-center">TEAM</a>
-                            <a href="#blog" class="nav-item px-6 flex items-center justify-center">BLOG</a>
-                            <a href="#contact" class="nav-item px-6 flex items-center justify-center">CONTACT</a>
-                        </nav>
-                    </div> -->
+        </div>
     </header>
 
     <!-- BANNER A PANTALLA COMPLETA (ESTILO IMPACTANTE CENTRADO) -->
-    <section id="home" class="relative bg-[#1a1a1a] h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden border-b border-slate-200" data-aos="fade-in" data-aos-duration="1000">
-        <!-- Imágenes de fondo con overlay oscuro suave para que resalte el texto central -->
-        <div class="hero-bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1920&q=80');" data-slide-index="0"></div>
-        <div class="hero-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1920&q=80');" data-slide-index="1"></div>
-        <div class="absolute inset-0 bg-black/50 pointer-events-none z-10"></div>
+   <section id="home">
+        <div id="hero-banner" class="relative min-h-screen text-white flex flex-col justify-between overflow-hidden font-sans transition-all duration-1000 ease-in-out bg-cover bg-center" style="background-image: url('<?php echo esc_url($primer_imagen); ?>');">
 
-        <div class="max-w-4xl mx-auto px-6 w-full relative z-20 text-center">
-            <div class="slide-text-item active-text" data-text-index="0">
-                <span class="inline-block bg-cyan-500/80 backdrop-blur-md text-white text-[11px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 shadow-lg">🔥 Tendencia Profesional</span>
-                <h1 class="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-md">WE BUILD FOR PASSIONATE PEOPLE</h1>
-                <p class="text-slate-200 text-sm sm:text-base mb-2 font-medium max-w-2xl mx-auto">Awesome colors, based on modern UI standards. Pixel perfect design tailored for conversion.</p>
-            </div>
-            <div class="slide-text-item hidden" data-text-index="1">
-                <span class="inline-block bg-cyan-500/80 backdrop-blur-md text-white text-[11px] font-extrabold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 shadow-lg">⚡ Global Reach</span>
-                <h1 class="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-md">WE DO BUSINESS WORLDWIDE</h1>
-                <p class="text-slate-200 text-sm sm:text-base mb-2 font-medium max-w-2xl mx-auto">We ensure quality & premium support. People love us & we love building for them.</p>
-            </div>
+            <!-- Gradiente de fondo -->
+            <div class="absolute inset-0 bg-gradient-to-b from-[#021511]/60 via-[#021511]/20 to-[#021511]/70 pointer-events-none"></div>
 
-            <div class="mt-8">
-                <a href="#features" class="inline-block bg-cyan-500 hover:bg-cyan-600 text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full shadow-2xl transition-all transform hover:-translate-y-1">
-                    Buscar Ahora
-                </a>
-            </div>
-        </div>
+            <!-- CONTENIDO CENTRAL -->
+            <main class="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto my-12" id="hero-content">
 
-        <!-- Indicadores / Dots del Slider abajo al centro -->
-        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-30">
-            <button class="slider-dot w-8 h-2 rounded-full bg-cyan-500 transition-all shadow" data-slide-to="0" aria-label="Slide 1"></button>
-            <button class="slider-dot w-3 h-2 rounded-full bg-white/50 hover:bg-white transition-all shadow" data-slide-to="1" aria-label="Slide 2"></button>
+                <!-- Etiqueta superior -->
+                <div id="hero-tag" class="inline-flex items-center gap-2 rounded-full bg-black/60 border border-amber-500/30 px-5 py-1.5 text-xs sm:text-sm font-bold tracking-widest text-amber-400 uppercase mb-6 transition-opacity duration-1000 ease-in-out">
+                    <?php echo esc_html($primer_slide ? $primer_slide['tag'] : ''); ?>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-none uppercase select-none">
+                    <span id="hero-title-1" class="block text-white transition-opacity duration-1000 ease-in-out"><?php echo esc_html($primer_slide ? $primer_slide['title1'] : ''); ?></span>
+                    <span id="hero-title-2" class="block text-transparent bg-clip-text bg-gradient-to-r from-[#0082c8] to-[#00a8ff] mt-2 filter drop-shadow-[0_5px_15px_rgba(0,130,200,0.3)] transition-opacity duration-1000 ease-in-out">
+                        <?php echo esc_html($primer_slide ? $primer_slide['title2'] : ''); ?>
+                    </span>
+                </h1>
+
+                <!-- Descripción -->
+                <p id="hero-desc" class="mt-6 text-lg sm:text-2xl text-gray-100 max-w-2xl font-normal leading-relaxed transition-opacity duration-1000 ease-in-out drop-shadow-md">
+                    <?php echo esc_html($primer_slide ? $primer_slide['desc'] : ''); ?>
+                </p>
+
+                <!-- Botón -->
+                <div class="mt-8">
+                    <?php if ($primer_slide && !empty($primer_slide['buton'])) : 
+                        $btn = $primer_slide['buton'];
+                    ?>
+                        <a id="hero-btn" href="<?php echo esc_url($btn['url']); ?>" target="<?php echo esc_attr($btn['target']); ?>" class="inline-block rounded-full bg-[#0082c8] hover:bg-[#0070ab] text-white font-extrabold text-xs tracking-wider uppercase px-8 py-3.5 transition-opacity transform hover:scale-105 duration-1000 ease-in-out shadow-lg shadow-[#0082c8]/40"><?php echo esc_html($btn['title']); ?></a>
+                    <?php endif; ?>
+                </div>
+
+            </main>
+
+            <!-- INDICADORES INFERIORES -->
+            <footer class="relative z-10 w-full flex justify-center gap-3 pb-8" id="hero-indicators">
+                <!-- Se generan y controlan dinámicamente con tu JS -->
+            </footer>
+
         </div>
     </section>
 
@@ -638,56 +665,87 @@
         sections.forEach(section => {
             observer.observe(section);
         });
+    </script>
 
-        const bgSlides = document.querySelectorAll('.hero-bg-slide');
-        const textItems = document.querySelectorAll('.slide-text-item');
-        const dots = document.querySelectorAll('.slider-dot');
-        let currentSlide = 0;
+    <script>
+        const slides = <?php echo json_encode($slides_php, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
 
-        function showSlide(index) {
-            bgSlides.forEach((slide, i) => {
-                if (i === index) {
-                    slide.classList.add('active');
-                } else {
-                    slide.classList.remove('active');
-                }
+        let currentIndex = 0;
+        let slideInterval;
+
+        const banner = document.getElementById('hero-banner');
+        const tag = document.getElementById('hero-tag');
+        const title1 = document.getElementById('hero-title-1');
+        const title2 = document.getElementById('hero-title-2');
+        const desc = document.getElementById('hero-desc');
+        const btn = document.getElementById('hero-btn');
+        const indicatorsContainer = document.getElementById('hero-indicators');
+
+        function createIndicators() {
+            indicatorsContainer.innerHTML = '';
+            slides.forEach((_, index) => {
+                const bar = document.createElement('button');
+                bar.className = `h-1.5 rounded-full transition-all duration-500 focus:outline-none cursor-pointer ${index === currentIndex ? 'w-12 bg-[#0082c8]' : 'w-8 bg-gray-600 hover:bg-gray-400'}`;
+                bar.addEventListener('click', () => {
+                    goToSlide(index);
+                });
+                indicatorsContainer.appendChild(bar);
             });
-
-            textItems.forEach((text, i) => {
-                if (i === index) {
-                    text.classList.remove('hidden');
-                } else {
-                    text.classList.add('hidden');
-                }
-            });
-
-            dots.forEach((dot, i) => {
-                if (i === index) {
-                    dot.classList.remove('w-3', 'bg-white/50');
-                    dot.classList.add('w-8', 'bg-cyan-500');
-                } else {
-                    dot.classList.remove('w-8', 'bg-cyan-500');
-                    dot.classList.add('w-3', 'bg-white/50');
-                }
-            });
-            currentSlide = index;
         }
 
-        let slideIntervalTimer = setInterval(() => {
-            let nextIndex = (currentSlide + 1) % bgSlides.length;
-            showSlide(nextIndex);
-        }, 5000);
+        function updateSlide() {
+            const current = slides[currentIndex];
 
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                clearInterval(slideIntervalTimer);
-                showSlide(index);
-                slideIntervalTimer = setInterval(() => {
-                    let nextIndex = (currentSlide + 1) % bgSlides.length;
-                    showSlide(nextIndex);
-                }, 5000);
-            });
-        });
+            // 1. Iniciar desvanecimiento (Fade Out)
+            tag.style.opacity = 0;
+            title1.style.opacity = 0;
+            title2.style.opacity = 0;
+            desc.style.opacity = 0;
+            if (btn) btn.style.opacity = 0;
+
+            // Subimos el tiempo de espera a 600ms para que el texto viejo termine de borrarse con calma
+            setTimeout(() => {
+                // Cambiar fondo e información de la diapositiva
+                banner.style.backgroundImage = `linear-gradient(to bottom, rgba(2,21,17,0.45), rgba(2,21,17,0.15)), url('${current.image}')`;
+
+                tag.innerHTML = current.tag;
+                title1.innerHTML = current.title1;
+                title2.innerHTML = current.title2;
+                desc.innerHTML = current.desc;
+
+                // 2. Mostrar nuevo texto suavemente (Fade In)
+                tag.style.opacity = 1;
+                title1.style.opacity = 1;
+                title2.style.opacity = 1;
+                desc.style.opacity = 1;
+                if (btn) btn.style.opacity = 1;
+
+                createIndicators();
+            }, 600); // 600ms de pausa entre el ocultado y la aparición
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlide();
+            resetTimer();
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlide();
+        }
+
+        function startTimer() {
+            slideInterval = setInterval(nextSlide, 5000); // Subido a 5 segundos para que la gente alcance a leer bien
+        }
+
+        function resetTimer() {
+            clearInterval(slideInterval);
+            startTimer();
+        }
+
+        updateSlide();
+        startTimer();
     </script>
     <!-- BOTÓN FLOTANTE IR ARRIBA -->
     <!-- BOTÓN FLOTANTE IR ARRIBA SUAVE -->
